@@ -3,7 +3,7 @@ import telebot
 import os
 import logging
 import telegram
-from telegram import Update
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 logging.basicConfig(
@@ -29,7 +29,55 @@ def getBotInfo(update, context):
 def start(update, context):
     bot = context.bot
     userName = update.effective_user["first_name"]
-    update.message.reply_text(f'Hola {userName} gracias por activarme, bolsa de cuernos')
+    update.message.reply_text(f'Hola {userName} gracias por activarme. Te dejo a continuación la lista de comandos que hizo el vago de Yamil: \n /start , /BotInfo, /addEvent , /event , /F1')
+    button1 = InlineKeyboardButton(
+        text = 'Mi perfil en Instagram',
+        url = 'https://www.instagram.com/yamil.pinero/'
+    )
+    button2 = InlineKeyboardButton(
+        text = 'Chatea conmigo',
+        url = 'https://t.me/YamilPi'
+    )
+    update.message.reply_text(
+        text = 'Haz click en un botón',
+        reply_markup = InlineKeyboardMarkup([
+            [button1, button2]
+        ])
+    )
+
+def F1(update, context):
+    bot = context.bot
+    userName = update.effective_user["first_name"]
+    update.message.reply_text(f'{userName} a continuación te dejo información sobre la Formula 1: \nNoticias, siguiente gran premio y más:')
+    button1 = InlineKeyboardButton(
+        text = 'Noticias',
+        url = 'https://www.formula1.com/en/latest.html'
+    )
+    button2 = InlineKeyboardButton(
+        text = 'Calendario 2022',
+        url = 'https://www.formula1.com/en/racing/2022.html'
+    )
+    button3 = InlineKeyboardButton(
+        text = 'Conoce a los pilotos',
+        url = 'https://www.formula1.com/en/drivers.html'
+    )
+    button4 = InlineKeyboardButton(
+        text = 'Futuro campeón',
+        url = 'https://www.instagram.com/charles_leclerc/'
+    )
+    button5 = InlineKeyboardButton(
+        text = 'F1 Instagram',
+        url = 'https://www.instagram.com/f1/'
+    )
+    update.message.reply_text(
+        text = 'Click para información',
+        reply_markup = InlineKeyboardMarkup([
+            [button1, button2],
+            [button3, button4],
+            [button5]
+        ])
+    )
+
 
 def wellcomeMsg(update, context):
     bot = context.bot
@@ -73,7 +121,12 @@ def echo(update, context):
     elif 'Hola' in text and 'Martina' in text:
         bot.sendMessage(
             chat_id = chatId,
-            text = f'Hola {userName}, lindo día, que mierda queres?!'
+            text = f'Hola {userName}, que tengas un lindo día!'
+        )
+    elif 'Formula 1' in text or 'formula 1' in text:
+        bot.sendMessage(
+            chat_id = chatId,
+            text = f'{userName} si te gusta la Formula 1 puedes clickear en /F1'
         )
 
 def userisAdmin(chatId, userId, bot):
@@ -147,6 +200,7 @@ dp = updater.dispatcher
 #create command
 dp.add_handler(CommandHandler("botInfo", getBotInfo))
 dp.add_handler(CommandHandler("start", start))
+dp.add_handler(CommandHandler("F1", F1))
 dp.add_handler(CommandHandler("addEvent", addEvent, pass_args=True))
 dp.add_handler(CommandHandler("event", event))
 dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, wellcomeMsg))
