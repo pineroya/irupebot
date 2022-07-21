@@ -69,15 +69,18 @@ def F1(update, context):
         text = 'F1 Instagram',
         url = 'https://www.instagram.com/f1/'
     )
+    button6 = InlineKeyboardButton(
+        text = 'G.O.A.T',
+        url = 'https://www.instagram.com/lewishamilton/'
+    )
     update.message.reply_text(
         text = 'Click para información',
         reply_markup = InlineKeyboardMarkup([
             [button1, button2],
             [button3, button4],
-            [button5]
+            [button5, button6]
         ])
     )
-
 
 def wellcomeMsg(update, context):
     bot = context.bot
@@ -149,29 +152,29 @@ def addEvent(update, context):
     userId = update.effective_user['id']
     args = context.args
 
-    if userisAdmin(chatId, userId, bot) == True:
-        if len(args) == 0:
-            logger.info(f'El usuario {userName} no ha ingresado argumentos')
-            bot.sendMessage(
-                chat_id = chatId,
-                text = f'{userName} porfavor ingresa más información para agregar al evento'
-            )
-        else:
-            evento = ' '.join(args)
-            eventos = eventos + '\n>>' + evento
-
-            logger.info(f'El usuario {userName} ha ingresado un nuevo evento')
-
-            bot.sendMessage(
-                chat_id = chatId,
-                text = f'{userName} has ingresado un evento correctamente'
-            )
-    else:
-        logger.info(f'{userName} ha intentado agregar un evento pero no tiene permisos')
+    # if userisAdmin(chatId, userId, bot) == True:
+    if len(args) == 0:
+        logger.info(f'El usuario {userName} no ha ingresado argumentos')
         bot.sendMessage(
             chat_id = chatId,
-            text = f'{userName} no tienes permisos para agregar un evento'
+            text = f'{userName} porfavor ingresa más información para agregar al evento'
         )
+    else:
+        evento = ' '.join(args)
+        eventos = eventos + '\n>>' + evento
+
+        logger.info(f'El usuario {userName} ha ingresado un nuevo evento')
+
+        bot.sendMessage(
+            chat_id = chatId,
+            text = f'{userName} has ingresado un evento correctamente'
+        )
+    # else:
+    #     logger.info(f'{userName} ha intentado agregar un evento pero no tiene permisos')
+    #     bot.sendMessage(
+    #         chat_id = chatId,
+    #         text = f'{userName} no tienes permisos para agregar un evento'
+    #     )
 
 def event(update, context):
     chatId = update.message.chat_id
@@ -183,8 +186,6 @@ def event(update, context):
         chat_id = chatId,
         text = eventos
     )
-
-
 
 if __name__ == "__main__":
     #obtener la informacion del bot
@@ -203,6 +204,7 @@ dp.add_handler(CommandHandler("start", start))
 dp.add_handler(CommandHandler("F1", F1))
 dp.add_handler(CommandHandler("addEvent", addEvent, pass_args=True))
 dp.add_handler(CommandHandler("event", event))
+dp.add_handler(CommandHandler("delEvent", delEvent, pass_args=True))
 dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, wellcomeMsg))
 dp.add_handler(MessageHandler(Filters.text, echo)) #con esto lee los mensajes del chat
 
