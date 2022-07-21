@@ -204,7 +204,6 @@ dp.add_handler(CommandHandler("start", start))
 dp.add_handler(CommandHandler("F1", F1))
 dp.add_handler(CommandHandler("addEvent", addEvent, pass_args=True))
 dp.add_handler(CommandHandler("event", event))
-dp.add_handler(CommandHandler("delEvent", delEvent, pass_args=True))
 dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, wellcomeMsg))
 dp.add_handler(MessageHandler(Filters.text, echo)) #con esto lee los mensajes del chat
 
