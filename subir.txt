@@ -1,0 +1,4 @@
+git push heroku master
+
+heroku logs -t -a irupebot
+para ver el logs en cmd

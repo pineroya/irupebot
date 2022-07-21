@@ -1,5 +1,5 @@
 from asyncore import dispatcher
-import telebot
+import fn
 import os
 import logging
 import telegram
@@ -187,6 +187,16 @@ def event(update, context):
         text = eventos
     )
 
+def cmd_roll_d6(update, context):
+    result = fn.roll_d6()
+    context.bot.send_message(update.message.chat_id, str(result))
+
+def cmd_animated_d6(update, context):
+    result = fn.roll_d6()
+    animation = fn.get_d6_img(result)
+    chatId = update.message.chat_id
+    context.bot.send_animation(chatId, animation)
+
 if __name__ == "__main__":
     #obtener la informacion del bot
     myBot = telegram.Bot(token = TOKEN)
@@ -204,6 +214,8 @@ dp.add_handler(CommandHandler("start", start))
 dp.add_handler(CommandHandler("F1", F1))
 dp.add_handler(CommandHandler("addEvent", addEvent, pass_args=True))
 dp.add_handler(CommandHandler("event", event))
+dp.add_handler(CommandHandler("rolld6", cmd_roll_d6))
+dp.add_handler(CommandHandler("dados", cmd_animated_d6))
 dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, wellcomeMsg))
 dp.add_handler(MessageHandler(Filters.text, echo)) #con esto lee los mensajes del chat
 
