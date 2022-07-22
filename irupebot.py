@@ -29,7 +29,7 @@ def getBotInfo(update, context):
 def start(update, context):
     bot = context.bot
     userName = update.effective_user["first_name"]
-    update.message.reply_text(f'Hola {userName} gracias por activarme. Te dejo a continuación la lista de comandos que hizo el vago de Yamil: \n /start , /BotInfo, /addEvent , /event , /F1')
+    update.message.reply_text(f'Hola {userName} gracias por activarme. Te dejo a continuación la lista de comandos que hizo el vago de Yamil: \n /start , /botinfo, /addevent , /event , /f1, /dados')
     button1 = InlineKeyboardButton(
         text = 'Mi perfil en Instagram',
         url = 'https://www.instagram.com/yamil.pinero/'
@@ -129,7 +129,7 @@ def echo(update, context):
     elif 'Formula 1' in text or 'formula 1' in text:
         bot.sendMessage(
             chat_id = chatId,
-            text = f'{userName} si te gusta la Formula 1 puedes clickear en /F1'
+            text = f'{userName} si te gusta la Formula 1 puedes clickear en /f1'
         )
 
 def userisAdmin(chatId, userId, bot):
@@ -209,10 +209,10 @@ updater = Updater(myBot.token, use_context = True)
 dp = updater.dispatcher
 
 #create command
-dp.add_handler(CommandHandler("botInfo", getBotInfo))
+dp.add_handler(CommandHandler("botinfo", getBotInfo))
 dp.add_handler(CommandHandler("start", start))
-dp.add_handler(CommandHandler("F1", F1))
-dp.add_handler(CommandHandler("addEvent", addEvent, pass_args=True))
+dp.add_handler(CommandHandler("f1", F1))
+dp.add_handler(CommandHandler("addevent", addEvent, pass_args=True))
 dp.add_handler(CommandHandler("event", event))
 dp.add_handler(CommandHandler("rolld6", cmd_roll_d6))
 dp.add_handler(CommandHandler("dados", cmd_animated_d6))
