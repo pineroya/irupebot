@@ -2,6 +2,7 @@ from asyncore import dispatcher
 import fn
 import os
 import logging
+import threading
 import telegram
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -31,8 +32,8 @@ def start(update, context):
     userName = update.effective_user["first_name"]
     update.message.reply_text(f'Hola {userName} gracias por activarme. Te dejo a continuación la lista de comandos que hizo el vago de Yamil: \n /start , /botinfo, /addevent , /event , /f1, /dados')
     button1 = InlineKeyboardButton(
-        text = 'Mi perfil en Instagram',
-        url = 'https://www.instagram.com/yamil.pinero/'
+        text = 'El origen de RamiMeMe',
+        url = 'https://www.instagram.com/p/BO2KkXqA7jswGgv-TYP26Bclf7ino4w0gzu5hk0/'
     )
     button2 = InlineKeyboardButton(
         text = 'Chatea conmigo',
@@ -94,7 +95,7 @@ def wellcomeMsg(update, context):
     bot.sendMessage(
         chat_id = chatId,
         parse_mode = "HTML",
-        text = f'<b>Bienvenido al grupo {userName}</b> \n Esperamos que disfrutes de esta comunidad bien chistosa, sentite a gusto y sentate en la torta'
+        text = f'<b>Bienvenido al grupo {userName}</b>'
     )
 
 def deleteMessage(bot, chatId, messageId, userName):
@@ -131,6 +132,10 @@ def echo(update, context):
             chat_id = chatId,
             text = f'{userName} si te gusta la Formula 1 puedes clickear en /f1'
         )
+    elif 'charo' in text:
+        chard = fn.get_chard()
+        chatId = update.message.chat_id
+        context.bot.send_animation(chatId, chard)
 
 def userisAdmin(chatId, userId, bot):
     try:
@@ -187,6 +192,15 @@ def event(update, context):
         text = eventos
     )
 
+def mibreak(update, context):
+    def send_alert(msg):
+        update.message.reply_text(msg)
+    minutos = float(context.args[0])
+    userName = update.effective_user["first_name"]
+    msg = (f'{userName} se terminó tu break, pestañaste')
+    timer = threading.Timer(minutos, send_alert, [msg])
+    timer.start()
+
 def cmd_roll_d6(update, context):
     result = fn.roll_d6()
     context.bot.send_message(update.message.chat_id, str(result))
@@ -216,6 +230,7 @@ dp.add_handler(CommandHandler("addevent", addEvent, pass_args=True))
 dp.add_handler(CommandHandler("event", event))
 dp.add_handler(CommandHandler("rolld6", cmd_roll_d6))
 dp.add_handler(CommandHandler("dados", cmd_animated_d6))
+dp.add_handler(CommandHandler("break", mibreak))
 dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, wellcomeMsg))
 dp.add_handler(MessageHandler(Filters.text, echo)) #con esto lee los mensajes del chat
 
